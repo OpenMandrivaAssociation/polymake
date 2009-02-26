@@ -3,19 +3,21 @@
 Summary: Algorithms around polytopes and polyhedra
 Name: polymake
 Version: 2.9.6
-Release: 1
+Release: %mkrel 1
 License: GPL
 Group: Applications/Sciences/Mathematics
 URL: http://www.math.tu-berlin.de/polymake/
-Vendor: TU Berlin, Algorithmic and Discrete Mathematics
-Packager: TU Berlin, Algorithmic and Discrete Mathematics <polymake@math.tu-berlin.de>
 Icon: as3.gif
 
 %define topname %{name}-%{version}
 Source: ftp://ftp.math.tu-berlin.de/pub/combi/polymake-alpha/%{topname}.tar.bz2
 Requires: perl >= 5.8.1 gcc-c++ perl(XML::LibXML) perl(XML::SAX::Base) perl(XML::Writer) perl(XML::LibXSLT) perl(Term::ReadLine::Gnu)
-BuildRequires: perl gcc-c++ gmp
-Prefix: /usr
+BuildRequires: perl-devel gcc-c++ libgmpxx-devel
+BuildRequires: perl-XML-Writer
+
+Patch0:		int_max.patch
+
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 Polymake is a versatile tool for the algorithmic treatment of
@@ -28,12 +30,12 @@ They introduce an interactive shell, the XML-base file format, more
 efficient C++/perl interface, and many other new features.
 
 %files
-%attr(-, bin, bin) /usr/bin/polymake
-%attr(-, bin, bin) /usr/share/polymake
-%attr(-, bin, bin) %dir /usr/%{_lib}/polymake
-%attr(-, bin, bin) %dir /usr/%{_lib}/polymake/perlx
-%attr(-, bin, bin) /usr/%{_lib}/polymake/lib
-%attr(-, bin, bin) %config /usr/%{_lib}/polymake/conf.make
+%attr(-, bin, bin) %{_bindir}/polymake
+%attr(-, bin, bin) %{_datadir}/polymake
+%attr(-, bin, bin) %dir %{_libdir}/polymake
+%attr(-, bin, bin) %dir %{_libdir}/polymake/perlx
+%attr(-, bin, bin) %{_libdir}/polymake/lib
+%attr(-, bin, bin) %config %{_libdir}/polymake/conf.make
 
 %define guess_prefix : ${RPM_INSTALL_PREFIX:=%{_prefix}} ${RPM_INSTALL_PREFIX:=$RPM_INSTALL_PREFIX0} ${RPM_INSTALL_PREFIX:=/usr}
 
@@ -72,9 +74,13 @@ fi
 
 %define ProjectTop %{_builddir}/%{topname}
 
+%patch0	-p1
+
 %build
-# won't build without java support
-export PATH=%{_libdir}/jvm/java-openjdk/bin:$PATH
+
+# if there is a javac in path, it will want to build java support
+perl -pi -e 's|(\$JAVA=\$Polymake::common::java;)|#$1|;' support/configure.pl
+
 Cflags=$(perl -e '$_=q{'"$RPM_OPT_FLAGS"'}; s/(?:^|\s)-(?:g|O\d)(?=\s|$)//g; print;')
 
 {
@@ -83,12 +89,11 @@ Cflags=$(perl -e '$_=q{'"$RPM_OPT_FLAGS"'}; s/(?:^|\s)-(?:g|O\d)(?=\s|$)//g; pri
    if [ "%{_host_cpu}" = x86_64 -a "%{_target_cpu}" != x86_64 ]; then
       echo LDflags=-m32
    fi
-   echo InstallTop=/usr/share/polymake
-   echo InstallArch=/usr/%{_lib}/polymake
-   echo InstallDoc=/usr/share/doc/polymake
-   echo InstallBin=/usr/bin
+   echo InstallTop=%{_datadir}/polymake
+   echo InstallArch=%{_libdir}/polymake
+   echo InstallDoc=%{_docdir}/polymake
+   echo InstallBin=%{_bindir}
    echo ProcessDep=none
-   echo JavaBuild=
    echo Arch=%{_target_cpu}
 } | make configure
 
@@ -96,9 +101,9 @@ make ProjectTop=%{ProjectTop} Arch=%{_target_cpu} %{?_smp_mflags}%{?!_smp_mflags
 
 
 %install
-make ProjectTop=%{ProjectTop} Arch=%{_target_cpu} PREFIX=/usr ${RPM_BUILD_ROOT:+DESTDIR=$RPM_BUILD_ROOT} install
-perl -i -p -e 's|(Install\w+=)/usr|$1\${PREFIX}|' $RPM_BUILD_ROOT/usr/%{_lib}/polymake/conf.make
+make ProjectTop=%{ProjectTop} Arch=%{_target_cpu} PREFIX=%{_prefix} ${RPM_BUILD_ROOT:+DESTDIR=$RPM_BUILD_ROOT} install
+perl -i -p -e 's|(Install\w+=)/usr|$1\${PREFIX}|' $RPM_BUILD_ROOT/%{_libdir}/polymake/conf.make
 perl support/install.pl -m 755 perl/ext $RPM_BUILD_ROOT/usr/share/polymake/perl/ext
-mkdir $RPM_BUILD_ROOT/usr/%{_lib}/polymake/perlx
+mkdir $RPM_BUILD_ROOT/%{_libdir}/polymake/perlx
 
 %define __find_provides %{ProjectTop}/support/find-provides
