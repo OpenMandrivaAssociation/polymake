@@ -1,7 +1,7 @@
 Name: polymake
 Summary: Algorithms around polytopes and polyhedra
 Version: 2.9.6
-Release: %mkrel 1
+Release: %mkrel 2
 License: GPL
 Group: Sciences/Mathematics
 URL: http://www.math.tu-berlin.de/polymake/
@@ -108,5 +108,3 @@ perl -pi						\
 perl support/install.pl -m 755 perl/ext $RPM_BUILD_ROOT/usr/share/polymake/perl/ext
 mkdir $RPM_BUILD_ROOT/%{_libdir}/polymake/perlx
 cp -fa %{SOURCE1} %{buildroot}/%{_datadir}/%{name}
-
-%define __find_provides %{ProjectTop}/support/find-provides
