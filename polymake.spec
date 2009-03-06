@@ -5,10 +5,10 @@ Release: %mkrel 1
 License: GPL
 Group: Sciences/Mathematics
 URL: http://www.math.tu-berlin.de/polymake/
-Icon: as3.gif
 
 %define topname %{name}-%{version}
 Source: ftp://ftp.math.tu-berlin.de/pub/combi/polymake-alpha/%{topname}.tar.bz2
+Source1: as3.gif
 Requires: perl >= 5.8.1 gcc-c++ perl(XML::LibXML) perl(XML::SAX::Base) perl(XML::Writer) perl(XML::LibXSLT) perl(Term::ReadLine::Gnu)
 BuildRequires: perl-devel gcc-c++ libgmpxx-devel
 BuildRequires: perl-XML-Writer
@@ -101,8 +101,12 @@ make ProjectTop=%{ProjectTop} Arch=%{_target_cpu} %{?_smp_mflags}%{?!_smp_mflags
 
 %install
 make ProjectTop=%{ProjectTop} Arch=%{_target_cpu} PREFIX=%{_prefix} ${RPM_BUILD_ROOT:+DESTDIR=$RPM_BUILD_ROOT} install
-perl -i -p -e 's|(Install\w+=)/usr|$1\${PREFIX}|' $RPM_BUILD_ROOT/%{_libdir}/polymake/conf.make
+perl -pi						\
+	-e 's|(Install\w+=)/usr|$1\${PREFIX}|;'		\
+	-e 's|\s*-L/usr/local/lib||;			\
+	$RPM_BUILD_ROOT/%{_libdir}/polymake/conf.make
 perl support/install.pl -m 755 perl/ext $RPM_BUILD_ROOT/usr/share/polymake/perl/ext
 mkdir $RPM_BUILD_ROOT/%{_libdir}/polymake/perlx
+cp -fa %{SOURCE1} %{buildroot}/%{_datadir}/%{name}
 
 %define __find_provides %{ProjectTop}/support/find-provides
