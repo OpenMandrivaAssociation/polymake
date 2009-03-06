@@ -1,11 +1,9 @@
-# $Project: polymake $$Id: polymake.spec 9097 2009-02-22 22:48:46Z gawrilow $
-
-Summary: Algorithms around polytopes and polyhedra
 Name: polymake
+Summary: Algorithms around polytopes and polyhedra
 Version: 2.9.6
 Release: %mkrel 1
 License: GPL
-Group: Applications/Sciences/Mathematics
+Group: Sciences/Mathematics
 URL: http://www.math.tu-berlin.de/polymake/
 Icon: as3.gif
 
@@ -30,12 +28,13 @@ They introduce an interactive shell, the XML-base file format, more
 efficient C++/perl interface, and many other new features.
 
 %files
-%attr(-, bin, bin) %{_bindir}/polymake
-%attr(-, bin, bin) %{_datadir}/polymake
-%attr(-, bin, bin) %dir %{_libdir}/polymake
-%attr(-, bin, bin) %dir %{_libdir}/polymake/perlx
-%attr(-, bin, bin) %{_libdir}/polymake/lib
-%attr(-, bin, bin) %config %{_libdir}/polymake/conf.make
+%defattr(-,root,root,-)
+%{_bindir}/polymake
+%{_datadir}/polymake
+%dir %{_libdir}/polymake
+%dir %{_libdir}/polymake/perlx
+%{_libdir}/polymake/lib
+%config %{_libdir}/polymake/conf.make
 
 %define guess_prefix : ${RPM_INSTALL_PREFIX:=%{_prefix}} ${RPM_INSTALL_PREFIX:=$RPM_INSTALL_PREFIX0} ${RPM_INSTALL_PREFIX:=/usr}
 
