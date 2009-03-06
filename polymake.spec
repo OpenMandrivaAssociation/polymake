@@ -103,7 +103,7 @@ make ProjectTop=%{ProjectTop} Arch=%{_target_cpu} %{?_smp_mflags}%{?!_smp_mflags
 make ProjectTop=%{ProjectTop} Arch=%{_target_cpu} PREFIX=%{_prefix} ${RPM_BUILD_ROOT:+DESTDIR=$RPM_BUILD_ROOT} install
 perl -pi						\
 	-e 's|(Install\w+=)/usr|$1\${PREFIX}|;'		\
-	-e 's|\s*-L/usr/local/lib||;			\
+	-e 's|\s*-L/usr/local/lib||;'			\
 	$RPM_BUILD_ROOT/%{_libdir}/polymake/conf.make
 perl support/install.pl -m 755 perl/ext $RPM_BUILD_ROOT/usr/share/polymake/perl/ext
 mkdir $RPM_BUILD_ROOT/%{_libdir}/polymake/perlx
