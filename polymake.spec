@@ -1,7 +1,7 @@
 Name: polymake
 Summary: Algorithms around polytopes and polyhedra
 Version: 2.9.6
-Release: %mkrel 2
+Release: %mkrel 3
 License: GPL
 Group: Sciences/Mathematics
 URL: http://www.math.tu-berlin.de/polymake/
@@ -9,9 +9,19 @@ URL: http://www.math.tu-berlin.de/polymake/
 %define topname %{name}-%{version}
 Source: ftp://ftp.math.tu-berlin.de/pub/combi/polymake-alpha/%{topname}.tar.bz2
 Source1: as3.gif
-Requires: perl >= 5.8.1 gcc-c++ perl(XML::LibXML) perl(XML::SAX::Base) perl(XML::Writer) perl(XML::LibXSLT) perl(Term::ReadLine::Gnu)
-BuildRequires: perl-devel gcc-c++ libgmpxx-devel
-BuildRequires: perl-XML-Writer
+Requires:	singular
+Requires:	cddlib-devel cdd+
+Requires:	perl >= 5.8.1 gcc-c++
+Requires:	perl-XML-LibXML
+Requires:	perl-XML-Writer
+Requires:	perl-Term-ReadLine-Gnu
+Provides:	perl(JavaView)
+Provides:	perl(Polymake::Core::RuleFilter)
+Provides:	perl(Polymake::Namespaces)
+Provides:	perl(Polymake::regex.pl)
+Provides:	perl(Polymake::utils.pl)
+BuildRequires:	perl-devel gcc-c++ libgmpxx-devel
+BuildRequires:	perl-XML-Writer
 
 Patch0:		int_max.patch
 
