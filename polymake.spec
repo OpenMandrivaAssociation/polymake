@@ -1,7 +1,7 @@
 Name: polymake
 Summary: Algorithms around polytopes and polyhedra
 Version: 2.9.6
-Release: %mkrel 3
+Release: %mkrel 4
 License: GPL
 Group: Sciences/Mathematics
 URL: http://www.math.tu-berlin.de/polymake/
@@ -24,6 +24,7 @@ BuildRequires:	perl-devel gcc-c++ libgmpxx-devel
 BuildRequires:	perl-XML-Writer
 
 Patch0:		int_max.patch
+Patch1:		polymake-2.9.6-format.patch
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
@@ -50,7 +51,7 @@ efficient C++/perl interface, and many other new features.
 
 # RPM still does not understand line continuations in spec files!
 
-%define build_perlx echo "Building perl extensions for polymake...";  : ${TMPDIR:=%{_tmppath}} ${TMPDIR:=/var/tmp};  rm -rf $TMPDIR/%{topname}-perlx;  mkdir $TMPDIR/%{topname}-perlx;  pushd $TMPDIR/%{topname}-perlx;  TOP=$RPM_INSTALL_PREFIX/share/polymake /usr/bin/perl $RPM_INSTALL_PREFIX/share/polymake/perl/ext/Makefile.PL;  make all pure_install InstallDir=$RPM_INSTALL_PREFIX/%{_lib}/polymake;  popd;  rm -rf $TMPDIR/%{topname}-perlx
+%define build_perlx echo "Building perl extensions for polymake...";  : ${TMPDIR:=/var/tmp};  rm -rf $TMPDIR/%{name}-perlx;  mkdir $TMPDIR/%{name}-perlx;  pushd $TMPDIR/%{name}-perlx;  TOP=$RPM_INSTALL_PREFIX/share/polymake /usr/bin/perl $RPM_INSTALL_PREFIX/share/polymake/perl/ext/Makefile.PL;  make all pure_install InstallDir=$RPM_INSTALL_PREFIX/%{_lib}/polymake;  popd;  rm -rf $TMPDIR/%{name}-perlx
 
 %post
 %{guess_prefix}
@@ -84,6 +85,7 @@ fi
 %define ProjectTop %{_builddir}/%{topname}
 
 %patch0	-p1
+%patch1	-p1
 
 %build
 
@@ -116,5 +118,5 @@ perl -pi						\
 	-e 's|\s*-L/usr/local/lib||;'			\
 	$RPM_BUILD_ROOT/%{_libdir}/polymake/conf.make
 perl support/install.pl -m 755 perl/ext $RPM_BUILD_ROOT/usr/share/polymake/perl/ext
-mkdir $RPM_BUILD_ROOT/%{_libdir}/polymake/perlx
+mkdir -p $RPM_BUILD_ROOT/%{_libdir}/polymake/perlx
 cp -fa %{SOURCE1} %{buildroot}/%{_datadir}/%{name}
