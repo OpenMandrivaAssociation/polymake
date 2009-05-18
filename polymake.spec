@@ -1,7 +1,7 @@
 Name: polymake
 Summary: Algorithms around polytopes and polyhedra
 Version: 2.9.6
-Release: %mkrel 5
+Release: %mkrel 6
 License: GPL
 Group: Sciences/Mathematics
 URL: http://www.math.tu-berlin.de/polymake/
@@ -9,6 +9,7 @@ URL: http://www.math.tu-berlin.de/polymake/
 %define topname %{name}-%{version}
 Source: ftp://ftp.math.tu-berlin.de/pub/combi/polymake-alpha/%{topname}.tar.bz2
 Source1: as3.gif
+Requires:	perl-devel
 Requires:	singular
 Requires:	cddlib-devel cdd+
 Requires:	perl >= 5.8.1 gcc-c++
