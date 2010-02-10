@@ -1,7 +1,7 @@
 Name: polymake
 Summary: Algorithms around polytopes and polyhedra
-Version: 2.9.6
-Release: %mkrel 6
+Version: 2.9.7
+Release: %mkrel 1
 License: GPL
 Group: Sciences/Mathematics
 URL: http://www.math.tu-berlin.de/polymake/
@@ -26,6 +26,7 @@ BuildRequires:	perl-XML-Writer
 
 Patch0:		int_max.patch
 Patch1:		polymake-2.9.6-format.patch
+Patch2:		polymake-2.9.7-gmp-5.0.0.patch
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
@@ -86,7 +87,8 @@ fi
 %define ProjectTop %{_builddir}/%{topname}
 
 %patch0	-p1
-%patch1	-p1
+#patch1	-p1
+%patch2 -p0
 
 %build
 
