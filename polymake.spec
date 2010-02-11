@@ -1,7 +1,7 @@
 Name: polymake
 Summary: Algorithms around polytopes and polyhedra
 Version: 2.9.7
-Release: %mkrel 1
+Release: %mkrel 2
 License: GPL
 Group: Sciences/Mathematics
 URL: http://www.math.tu-berlin.de/polymake/
@@ -21,6 +21,7 @@ Provides:	perl(Polymake::Core::RuleFilter)
 Provides:	perl(Polymake::Namespaces)
 Provides:	perl(Polymake::regex.pl)
 Provides:	perl(Polymake::utils.pl)
+Provides:	perl(Polymake::Sockets)
 BuildRequires:	perl-devel gcc-c++ libgmpxx-devel
 BuildRequires:	perl-XML-Writer
 
