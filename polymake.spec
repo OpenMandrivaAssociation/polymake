@@ -33,7 +33,7 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 Polymake is a versatile tool for the algorithmic treatment of
-polytopes and polyhedra.  It offers an unified interface to a wide
+polytopes and polyhedra.  It offers a unified interface to a wide
 variety of algorithms and free software packages from the computational
 geometry field, such as convex hull computation or visualization tools.
 
