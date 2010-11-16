@@ -1,14 +1,14 @@
-Name: polymake
-Summary: Algorithms around polytopes and polyhedra
-Version: 2.9.7
-Release: %mkrel 2
-License: GPL
-Group: Sciences/Mathematics
-URL: http://www.math.tu-berlin.de/polymake/
+Name:		polymake
+Summary:	Algorithms around polytopes and polyhedra
+Version:	2.9.9
+Release:	%mkrel 1
+License:	GPL
+Group:		Sciences/Mathematics
+URL:		http://www.polymake.de/
 
 %define topname %{name}-%{version}
-Source: ftp://ftp.math.tu-berlin.de/pub/combi/polymake-alpha/%{topname}.tar.bz2
-Source1: as3.gif
+Source:		ftp://ftp.math.tu-berlin.de/pub/combi/polymake-alpha/%{topname}.tar.bz2
+Source1:	as3.gif
 Requires:	perl-devel
 Requires:	singular
 Requires:	cddlib-devel cdd+
@@ -22,12 +22,15 @@ Provides:	perl(Polymake::Namespaces)
 Provides:	perl(Polymake::regex.pl)
 Provides:	perl(Polymake::utils.pl)
 Provides:	perl(Polymake::Sockets)
+BuildRequires:	gmp-devel
 BuildRequires:	perl-devel gcc-c++ libgmpxx-devel
 BuildRequires:	perl-XML-Writer
+BuildRequires:	perl-XML-LibXSLT
+BuildRequires:  java-rpmbuild
+BuildRequires:	ant
 
 Patch0:		int_max.patch
-Patch1:		polymake-2.9.7-format.patch
-Patch2:		polymake-2.9.7-gmp-5.0.0.patch
+Patch1:		polymake-2.9.9-format.patch
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
@@ -49,12 +52,13 @@ efficient C++/perl interface, and many other new features.
 %dir %{_libdir}/polymake/perlx
 %{_libdir}/polymake/lib
 %config %{_libdir}/polymake/conf.make
+%doc %{_docdir}/%{name}
 
 %define guess_prefix : ${RPM_INSTALL_PREFIX:=%{_prefix}} ${RPM_INSTALL_PREFIX:=$RPM_INSTALL_PREFIX0} ${RPM_INSTALL_PREFIX:=/usr}
 
 # RPM still does not understand line continuations in spec files!
 
-%define build_perlx echo "Building perl extensions for polymake...";  : ${TMPDIR:=/var/tmp};  rm -rf $TMPDIR/%{name}-perlx;  mkdir $TMPDIR/%{name}-perlx;  pushd $TMPDIR/%{name}-perlx;  TOP=$RPM_INSTALL_PREFIX/share/polymake /usr/bin/perl $RPM_INSTALL_PREFIX/share/polymake/perl/ext/Makefile.PL;  make all pure_install InstallDir=$RPM_INSTALL_PREFIX/%{_lib}/polymake;  popd;  rm -rf $TMPDIR/%{name}-perlx
+%define build_perlx echo "Building perl extensions for polymake...";  : ${TMPDIR:=%{_tmppath}} ${TMPDIR:=/var/tmp};  rm -rf $TMPDIR/%{topname}-perlx;  mkdir $TMPDIR/%{topname}-perlx;  pushd $TMPDIR/%{topname}-perlx;  TOP=$RPM_INSTALL_PREFIX/share/polymake /usr/bin/perl $RPM_INSTALL_PREFIX/share/polymake/perl/ext/Makefile.PL;  make all pure_install InstallDir=$RPM_INSTALL_PREFIX/%{_lib}/polymake;  popd;  rm -rf $TMPDIR/%{topname}-perlx
 
 %post
 %{guess_prefix}
@@ -88,39 +92,22 @@ fi
 %define ProjectTop %{_builddir}/%{topname}
 
 %patch0	-p1
-%patch1	-p0 -b .str
-%patch2 -p0
+%patch1	-p1
 
 %build
 
-# if there is a javac in path, it will want to build java support
-perl -pi -e 's|(\$JAVA=\$Polymake::common::java;)|#$1|;' support/configure.pl
+if [ "%{_host_cpu}" = x86_64 -a "%{_target_cpu}" != x86_64 ]; then
+  LDflags="LDFLAGS=-m32"
+fi
 
-Cflags=$(perl -e '$_=q{'"$RPM_OPT_FLAGS"'}; s/(?:^|\s)-(?:g|O\d)(?=\s|$)//g; print;')
+./configure --prefix=%{_prefix} --libdir=%{_libdir}/polymake --docdir=%{_docdir}/%{name} \
+            --build=%{_target_cpu} \
+	    CFLAGS="$(perl -e '$_=q{'"$RPM_OPT_FLAGS"'}; s/(?:^|\s)-(?:g|O\d)(?=\s|$)//g; print;')" $LDFLAGS
 
-{
-   echo Cflags=$Cflags
-   echo CXXflags=$Cflags
-   if [ "%{_host_cpu}" = x86_64 -a "%{_target_cpu}" != x86_64 ]; then
-      echo LDflags=-m32
-   fi
-   echo InstallTop=%{_datadir}/polymake
-   echo InstallArch=%{_libdir}/polymake
-   echo InstallDoc=%{_docdir}/polymake
-   echo InstallBin=%{_bindir}
-   echo ProcessDep=none
-   echo Arch=%{_target_cpu}
-} | make configure
-
-make ProjectTop=%{ProjectTop} Arch=%{_target_cpu} %{?_smp_mflags}%{?!_smp_mflags:%(NCPUS=`grep -c '^processor' /proc/cpuinfo`; [ -n "$NCPUS" -a "$NCPUS" -gt 1 ] && echo -j$NCPUS )}
-
+make Arch=%{_target_cpu} %{?_smp_mflags}%{?!_smp_mflags:%(NCPUS=`grep -c '^processor' /proc/cpuinfo`; [ -n "$NCPUS" -a "$NCPUS" -gt 1 ] && echo -j$NCPUS )} ProcessDep=n
 
 %install
-make ProjectTop=%{ProjectTop} Arch=%{_target_cpu} PREFIX=%{_prefix} ${RPM_BUILD_ROOT:+DESTDIR=$RPM_BUILD_ROOT} install
-perl -pi						\
-	-e 's|(Install\w+=)/usr|$1\${PREFIX}|;'		\
-	-e 's|\s*-L/usr/local/lib||;'			\
-	$RPM_BUILD_ROOT/%{_libdir}/polymake/conf.make
-perl support/install.pl -m 755 perl/ext $RPM_BUILD_ROOT/usr/share/polymake/perl/ext
-mkdir -p $RPM_BUILD_ROOT/%{_libdir}/polymake/perlx
-cp -fa %{SOURCE1} %{buildroot}/%{_datadir}/%{name}
+make Arch=%{_target_cpu} PREFIX=%{_prefix} ${RPM_BUILD_ROOT:+DESTDIR=%{buildroot}} install docs
+perl support/install.pl -m 755 perl/ext %{buildroot}%{_datadir}/%{_name}/perl/ext
+mkdir -p %{buildroot}%{_libdir}/polymake/perlx
+cp -fa %{SOURCE1} %{buildroot}%{_datadir}/%{name}
