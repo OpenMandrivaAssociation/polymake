@@ -107,7 +107,10 @@ fi
 make Arch=%{_target_cpu} %{?_smp_mflags}%{?!_smp_mflags:%(NCPUS=`grep -c '^processor' /proc/cpuinfo`; [ -n "$NCPUS" -a "$NCPUS" -gt 1 ] && echo -j$NCPUS )} ProcessDep=n
 
 %install
-make Arch=%{_target_cpu} PREFIX=%{_prefix} ${RPM_BUILD_ROOT:+DESTDIR=%{buildroot}} install docs
-perl support/install.pl -m 755 perl/ext %{buildroot}%{_datadir}/%{_name}/perl/ext
+make Arch=%{_target_cpu} PREFIX=%{_prefix} DESTDIR=%{buildroot} install docs
+perl support/install.pl -m 755 perl/ext %{buildroot}%{_datadir}/%{name}/perl/ext
 mkdir -p %{buildroot}%{_libdir}/polymake/perlx
 cp -fa %{SOURCE1} %{buildroot}%{_datadir}/%{name}
+
+# give write permissions to owner so that strip works
+find %{buildroot}%{_libdir} | xargs chmod u+w
