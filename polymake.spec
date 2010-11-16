@@ -1,3 +1,5 @@
+%define _requires_exceptions	libCg\\|libGL\\|libjack\\|libjawt\\|libXxf86vm
+
 Name:		polymake
 Summary:	Algorithms around polytopes and polyhedra
 Version:	2.9.9
@@ -9,15 +11,19 @@ URL:		http://www.polymake.de/
 %define topname %{name}-%{version}
 Source:		ftp://ftp.math.tu-berlin.de/pub/combi/polymake-alpha/%{topname}.tar.bz2
 Source1:	as3.gif
+Requires:       java > 1.5
+Requires:       jogl
 Requires:	perl-devel
 Requires:	singular
-Requires:	cddlib-devel cdd+
+Requires:	libcg
 Requires:	perl >= 5.8.1 gcc-c++
 Requires:	perl-XML-LibXML
 Requires:	perl-XML-Writer
 Requires:	perl-Term-ReadLine-Gnu
 Provides:	perl(JavaView)
+Provides:	perl(Polymake::Core::InteractiveCommands)
 Provides:	perl(Polymake::Core::RuleFilter)
+Provides:	perl(Polymake::Background)
 Provides:	perl(Polymake::Namespaces)
 Provides:	perl(Polymake::regex.pl)
 Provides:	perl(Polymake::utils.pl)
@@ -100,10 +106,12 @@ if [ "%{_host_cpu}" = x86_64 -a "%{_target_cpu}" != x86_64 ]; then
   LDflags="LDFLAGS=-m32"
 fi
 
-./configure --prefix=%{_prefix} --libdir=%{_libdir}/polymake --docdir=%{_docdir}/%{name} \
-            --build=%{_target_cpu} \
-	    CFLAGS="$(perl -e '$_=q{'"$RPM_OPT_FLAGS"'}; s/(?:^|\s)-(?:g|O\d)(?=\s|$)//g; print;')" $LDFLAGS
-
+./configure				\
+	--prefix=%{_prefix} 		\
+	--libdir=%{_libdir}/polymake	\
+	--docdir=%{_docdir}/%{name}	\
+        --build=%{_target_cpu}		\
+	CFLAGS="$(perl -e '$_=q{'"$RPM_OPT_FLAGS"'}; s/(?:^|\s)-(?:g|O\d)(?=\s|$)//g; print;')" $LDFLAGS
 make Arch=%{_target_cpu} %{?_smp_mflags}%{?!_smp_mflags:%(NCPUS=`grep -c '^processor' /proc/cpuinfo`; [ -n "$NCPUS" -a "$NCPUS" -gt 1 ] && echo -j$NCPUS )} ProcessDep=n
 
 %install
