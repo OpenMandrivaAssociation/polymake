@@ -37,6 +37,7 @@ BuildRequires:	ant
 
 Patch0:		int_max.patch
 Patch1:		polymake-2.9.9-format.patch
+Patch2:		polymake-2.9.9-make-3.82.patch
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
@@ -99,6 +100,7 @@ fi
 
 %patch0	-p1
 %patch1	-p1
+%patch2	-p1
 
 %build
 
