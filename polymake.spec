@@ -34,6 +34,7 @@ BuildRequires:	perl-XML-Writer
 BuildRequires:	perl-XML-LibXSLT
 BuildRequires:  java-rpmbuild
 BuildRequires:	ant
+BuildRequires:	xsltproc
 
 Patch0:		int_max.patch
 Patch1:		polymake-2.9.9-format.patch
