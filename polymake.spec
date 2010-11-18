@@ -4,7 +4,7 @@
 Name:		polymake
 Summary:	Algorithms around polytopes and polyhedra
 Version:	2.9.9
-Release:	%mkrel 2
+Release:	%mkrel 3
 License:	GPL
 Group:		Sciences/Mathematics
 URL:		http://www.polymake.de/
@@ -22,6 +22,7 @@ Provides:	perl(Polymake::regex.pl)
 Provides:	perl(Polymake::utils.pl)
 Provides:	perl(Polymake::Sockets)
 
+Requires:	make
 Requires:	perl-devel
 Requires:	perl >= 5.8.1 gcc-c++
 Requires:	perl-XML-LibXML
@@ -71,37 +72,39 @@ efficient C++/perl interface, and many other new features.
 %config %{_libdir}/polymake/conf.make
 %doc %{_docdir}/%{name}
 
-%define guess_prefix : ${RPM_INSTALL_PREFIX:=%{_prefix}} ${RPM_INSTALL_PREFIX:=$RPM_INSTALL_PREFIX0} ${RPM_INSTALL_PREFIX:=/usr}
-
-# RPM still does not understand line continuations in spec files!
-
-%define build_perlx echo "Building perl extensions for polymake...";  : ${TMPDIR:=%{_tmppath}} ${TMPDIR:=/var/tmp};  rm -rf $TMPDIR/%{topname}-perlx;  mkdir $TMPDIR/%{topname}-perlx;  pushd $TMPDIR/%{topname}-perlx;  TOP=$RPM_INSTALL_PREFIX/share/polymake /usr/bin/perl $RPM_INSTALL_PREFIX/share/polymake/perl/ext/Makefile.PL;  make all pure_install InstallDir=$RPM_INSTALL_PREFIX/%{_lib}/polymake;  popd;  rm -rf $TMPDIR/%{topname}-perlx
-
 %post
-%{guess_prefix}
-%{build_perlx}
-
-if [ "$RPM_INSTALL_PREFIX" != /usr ]; then
-   /usr/bin/perl -i -p -e 's|(PREFIX=).*|$1'$RPM_INSTALL_PREFIX'|' $RPM_INSTALL_PREFIX/%{_lib}/polymake/conf.make
-fi
-
+echo "Building perl extensions for polymake..."
+[ -d $TMPDIR ] || TMPDIR=$HOME/tmp
+[ -d $TMPDIR ] || exit 1
+rm -rf $TMPDIR/%{name}-perlx
+mkdir $TMPDIR/%{name}-perlx
+pushd $TMPDIR/%{name}-perlx || exit 1
+    export TOP=%{_datadir}/polymake
+    /usr/bin/perl %{_datadir}/polymake/perl/ext/Makefile.PL
+    make all pure_install InstallDir=%{_libdir}/polymake
+popd
+rm -rf $TMPDIR/%{name}-perlx
 
 %triggerin -- perl
-%{guess_prefix}
-
 eval perl_`/usr/bin/perl -V:version`
-if [ ! -d $RPM_INSTALL_PREFIX/%{_lib}/polymake/perlx/${perl_version} ]; then
-  %{build_perlx}
+if [ ! -d %{_libdir}/polymake/perlx/${perl_version} ]; then
+    echo "Building perl extensions for polymake..."
+    [ -d $TMPDIR ] || TMPDIR=$HOME/tmp
+    [ -d $TMPDIR ] || exit 1
+    rm -rf $TMPDIR/%{name}-perlx
+    mkdir $TMPDIR/%{name}-perlx
+    pushd $TMPDIR/%{name}-perlx || exit 1
+	export TOP=%{_datadir}/polymake
+	/usr/bin/perl %{_datadir}/polymake/perl/ext/Makefile.PL
+	make all pure_install InstallDir=%{_libdir}/polymake
+    popd
+    rm -rf $TMPDIR/%{name}-perlx
 fi
-
 
 %preun
-%{guess_prefix}
-
 if [ $1 = 0 ]; then
-   rm -rf $RPM_INSTALL_PREFIX/%{_lib}/polymake/perlx/*
+   rm -rf %{_libdir}/polymake/perlx/*
 fi
-
 
 %prep
 %setup -q -n %{topname}
