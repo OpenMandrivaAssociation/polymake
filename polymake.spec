@@ -1,9 +1,10 @@
+%define enable_java		0
 %define _requires_exceptions	libCg\\|libGL\\|libjack\\|libjawt\\|libXxf86vm
 
 Name:		polymake
 Summary:	Algorithms around polytopes and polyhedra
 Version:	2.9.9
-Release:	%mkrel 1
+Release:	%mkrel 2
 License:	GPL
 Group:		Sciences/Mathematics
 URL:		http://www.polymake.de/
@@ -11,15 +12,7 @@ URL:		http://www.polymake.de/
 %define topname %{name}-%{version}
 Source:		ftp://ftp.math.tu-berlin.de/pub/combi/polymake-alpha/%{topname}.tar.bz2
 Source1:	as3.gif
-Requires:       java > 1.5
-Requires:       jogl
-Requires:	perl-devel
-Requires:	singular
-Requires:	libcg
-Requires:	perl >= 5.8.1 gcc-c++
-Requires:	perl-XML-LibXML
-Requires:	perl-XML-Writer
-Requires:	perl-Term-ReadLine-Gnu
+
 Provides:	perl(JavaView)
 Provides:	perl(Polymake::Core::InteractiveCommands)
 Provides:	perl(Polymake::Core::RuleFilter)
@@ -28,17 +21,33 @@ Provides:	perl(Polymake::Namespaces)
 Provides:	perl(Polymake::regex.pl)
 Provides:	perl(Polymake::utils.pl)
 Provides:	perl(Polymake::Sockets)
+
+Requires:	perl-devel
+Requires:	perl >= 5.8.1 gcc-c++
+Requires:	perl-XML-LibXML
+Requires:	perl-XML-Writer
+Requires:	perl-Term-ReadLine-Gnu
+Requires:	singular
 BuildRequires:	gmp-devel
 BuildRequires:	perl-devel gcc-c++ libgmpxx-devel
 BuildRequires:	perl-XML-Writer
 BuildRequires:	perl-XML-LibXSLT
+
+%if %{enable_java}
+# libcg is in non free
+Requires:	libcg
+Requires:       java > 1.5
+Requires:       jogl
 BuildRequires:  java-rpmbuild
 BuildRequires:	ant
+%endif
+
 BuildRequires:	xsltproc
 
 Patch0:		int_max.patch
 Patch1:		polymake-2.9.9-format.patch
 Patch2:		polymake-2.9.9-make-3.82.patch
+Patch3:		polymake-2.9.9-without-java.patch
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
@@ -103,6 +112,18 @@ fi
 %patch1	-p1
 %patch2	-p1
 
+%if !%{enable_java}
+%patch3 -p1
+# do not cause it to link to or require 64 bit libraries
+
+%ifarch x86_64 ppc64
+rm -fr %{_builddir}/external/jreality/jni/linux32
+%else
+rm -fr %{_builddir}/external/jreality/jni/linux64
+%endif
+
+%endif
+
 %build
 
 if [ "%{_host_cpu}" = x86_64 -a "%{_target_cpu}" != x86_64 ]; then
@@ -114,6 +135,10 @@ fi
 	--libdir=%{_libdir}/polymake	\
 	--docdir=%{_docdir}/%{name}	\
         --build=%{_target_cpu}		\
+%if !%{enable_java}
+	--without-javaview		\
+	--without-java			\
+%endif
 	CFLAGS="$(perl -e '$_=q{'"$RPM_OPT_FLAGS"'}; s/(?:^|\s)-(?:g|O\d)(?=\s|$)//g; print;')" $LDFLAGS
 make Arch=%{_target_cpu} %{?_smp_mflags}%{?!_smp_mflags:%(NCPUS=`grep -c '^processor' /proc/cpuinfo`; [ -n "$NCPUS" -a "$NCPUS" -gt 1 ] && echo -j$NCPUS )} ProcessDep=n
 
