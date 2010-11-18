@@ -115,13 +115,6 @@ fi
 %if !%{enable_java}
 %patch3 -p1
 # do not cause it to link to or require 64 bit libraries
-
-%ifarch x86_64 ppc64
-rm -fr %{_builddir}/external/jreality/jni/linux32
-%else
-rm -fr %{_builddir}/external/jreality/jni/linux64
-%endif
-
 %endif
 
 %build
@@ -150,3 +143,15 @@ cp -fa %{SOURCE1} %{buildroot}%{_datadir}/%{name}
 
 # give write permissions to owner so that strip works
 find %{buildroot}%{_libdir} | xargs chmod u+w
+
+find %{buildroot}%{_libdir} -name \*.so | xargs chmod a-x
+
+%if %{enable_java}
+    %ifarch x86_64 ppc64
+	rm -fr %{buildroot}%{_libdir}/%{name}/jreality/jni/linux32
+    %else
+	rm -fr %{buildroot}%{_libdir}/%{name}/jreality/jni/linux64
+    %endif
+%else
+    rm -fr %{buildroot}%{_libdir}/%{name}/lib/jreality
+%endif
