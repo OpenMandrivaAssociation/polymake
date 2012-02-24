@@ -49,6 +49,8 @@ BuildRequires:	xsltproc
 BuildRequires:	xhtml1-dtds
 BuildRequires:	perl(XML::LibXML) perl(XML::SAX::Base) perl(XML::Writer) perl(ExtUtils::MakeMaker)
 
+Patch0:		polymake-2.11-format.patch
+
 %description
 Polymake is a versatile tool for the algorithmic treatment of
 polytopes and polyhedra.  It offers an unified interface to a wide
@@ -69,6 +71,8 @@ geometry field, such as convex hull computation or visualization tools.
 
 %prep
 %setup -q -n %{topname}
+
+%patch0 -p1
 
 %build
 Cflags="$(perl -e '$_=q{'"$RPM_OPT_FLAGS"'}; s/(?:^|\s)-(?:g|O\d)(?=\s|$)//g; print;')"
