@@ -89,8 +89,13 @@ LDflags="-lxml2 -lpthread -ldl"
 	--without-javaview			\
 	--without-java				\
 %endif
-	CC=gcc CXX=g++ CFLAGS="$Cflags" CXXFLAGS="$Cflags" LDFLAGS="$LDflags"
-%make Arch=%{_target_cpu} ProcessDep=n
+	CC=gcc					\
+	CXX=g++					\
+	CXXOPT=-O2				\
+	CFLAGS="$Cflags"			\
+	CXXFLAGS="$Cflags"			\
+	LDFLAGS="$LDflags"
+make Arch=%{_target_cpu} ProcessDep=n
 
 %install
 make Arch=%{_target_cpu} PREFIX=%{_prefix} DESTDIR=%{buildroot} install release-docs
