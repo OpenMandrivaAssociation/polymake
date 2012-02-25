@@ -1,3 +1,6 @@
+%define		_enable_debug_packages	%{nil}
+%define		debug_package		%{nil}
+
 %bcond_without	java
 %define _requires_exceptions	libCg\\|libGL\\|libjack\\|libjawt\\|libXxf86vm.so.1\\|libX11.so.6
 
@@ -75,7 +78,13 @@ geometry field, such as convex hull computation or visualization tools.
 %patch0 -p1
 
 %build
-Cflags="$(perl -e '$_=q{'"$RPM_OPT_FLAGS"'}; s/(?:^|\s)-(?:g|O\d)(?=\s|$)//g; print;')"
+Cflags=`echo %{optflags} |				\
+    sed	-e 's/\(-Wp,\)\?-D_FORTIFY_SOURCE=[12]//g'	\
+	-e 's/-gdwarf-4//'				\
+	-e 's/-Wa,--compress-debug-sections//'		\
+	-e 's/-fvar-tracking-assignments//'		\
+	-e 's/-frecord-gcc-switches//'`
+Cflags=`echo "$Cflags" | sed -e 's/[[:blank:]]\+/ /g'`
 Cflags="$Cflags -pthread"
 LDflags="-lxml2 -lpthread -ldl"
 ./configure					\
