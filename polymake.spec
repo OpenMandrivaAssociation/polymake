@@ -7,7 +7,7 @@
 Name:		polymake
 Summary:	Algorithms around polytopes and polyhedra
 Version:	2.11
-Release:	%mkrel 1
+Release:	%mkrel 2
 License:	GPL
 Group:		Sciences/Mathematics
 URL:		http://www.polymake.org/
@@ -116,9 +116,9 @@ find %{buildroot}%{_libdir} -name \*.so | xargs chmod a-x
 
 %if %{with java}
     %ifarch x86_64 ppc64
-	rm -fr %{buildroot}%{_libdir}/%{name}/jreality/jni/linux32
+	rm -fr %{buildroot}%{_libdir}/%{name}/lib/jreality/jni/linux32
     %else
-	rm -fr %{buildroot}%{_libdir}/%{name}/jreality/jni/linux64
+	rm -fr %{buildroot}%{_libdir}/%{name}/lib/jreality/jni/linux64
     %endif
 %else
     rm -fr %{buildroot}%{_libdir}/%{name}/lib/jreality
