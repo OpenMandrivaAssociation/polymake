@@ -1,0 +1,65 @@
+--- polymake-2.11/lib/core/src/perl/RefHash.xs.orig	2012-02-24 14:00:01.550442112 -0200
++++ polymake-2.11/lib/core/src/perl/RefHash.xs	2012-02-24 14:06:03.868433013 -0200
+@@ -152,7 +152,7 @@ OP* intercept_pp_helem(pTHX)
+    if (SvROK(keysv)) {
+       tmp_keysv tmp_key;
+       if (!RefKeyAllowed(hv,class))
+-         DIE(aTHX_ err_ref);
++         DIE("%s", aTHX_ err_ref);
+       if ((PL_op->op_private & (OPpLVAL_INTRO | OPpLVAL_DEFER)) == OPpLVAL_INTRO &&
+           (PL_op->op_flags & OPf_MOD || LVRET)) {
+          HE *he;
+@@ -230,7 +230,7 @@ OP* intercept_pp_hslice(pTHX)
+             RETURN;
+ 
+          } else {
+-            DIE(aTHX_ err_ref);
++            DIE("%s", aTHX_ err_ref);
+          }
+       }
+       else if (class==my_pkg) {
+@@ -313,7 +313,7 @@ OP* intercept_pp_delete(pTHX)
+                   }
+                   RETURN;
+                } else {
+-                  DIE(aTHX_ err_ref);
++                  DIE("%s", aTHX_ err_ref);
+                }
+             } else if (class==my_pkg) {
+                if (HvFILL(hv))
+@@ -340,7 +340,7 @@ OP* intercept_pp_delete(pTHX)
+             }
+             RETURN;
+          } else {
+-            DIE(aTHX_ err_ref);
++            DIE("%s", aTHX_ err_ref);
+          }
+       } else if (class==my_pkg) {
+          if (HvFILL(hv))
+@@ -441,7 +441,7 @@ OP* ref_assign(pTHX)
+ 
+    } else if (firstR < lastR && SvROK(PL_stack_base[firstR])) {
+       if (!RefKeyAllowed(hv,class))
+-         DIE(aTHX_ err_ref);
++         DIE("%s", aTHX_ err_ref);
+ 
+       /* the assignment loop is borrowed from the appropriate branch in pp_aassign */
+       hv_clear(hv);
+@@ -519,7 +519,7 @@ OP* pp_pushhv(pTHX)
+                (void)hv_store_ent(hv, keysv, tmp_val, TmpKeyHash(tmp_key));
+             } while (MARK < SP);
+          } else {
+-            DIE(aTHX_ err_ref);
++            DIE("%s", aTHX_ err_ref);
+          }
+       } else {
+          if (class==my_pkg) {
+@@ -531,7 +531,7 @@ OP* pp_pushhv(pTHX)
+          do {
+             keysv=*++MARK;
+             if (SvROK(keysv))
+-               DIE(aTHX_ err_ref);
++               DIE("%s", aTHX_ err_ref);
+             value=*++MARK;
+             tmp_val = newSV(0); /* copy of the value */
+             if (value) sv_setsv(tmp_val,value);
