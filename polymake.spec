@@ -2,18 +2,22 @@
 %define		debug_package		%{nil}
 
 %bcond_without	java
+
+%if %{_use_internal_dependency_generator}
+%define __noautoreq 'libCg(.*)|libGL(.*)|libjack(.*)|libjawt(.*)|libXxf86vm(.*)|libX11(.*)'
+%else
 %define _requires_exceptions	libCg\\|libGL\\|libjack\\|libjawt\\|libXxf86vm.so.1\\|libX11.so.6
+%endif
 
 Name:		polymake
 Summary:	Algorithms around polytopes and polyhedra
-Version:	2.11
-Release:	%mkrel 2
+Version:	2.12
+Release:	1
 License:	GPL
 Group:		Sciences/Mathematics
 URL:		http://www.polymake.org/
 
-%define topname %{name}-%{version}
-Source:		http://www.polymake.org/lib/exe/fetch.php/download/%{topname}.tar.bz2
+Source:		http://www.polymake.org/lib/exe/fetch.php/download/%{name}-%{version}-rc3.tar.bz2
 Source1:	as3.gif
 
 Provides:	perl(JavaView)
@@ -32,7 +36,10 @@ Requires:	gmpxx-devel
 Requires:	mpfr-devel
 Requires:	java >= 1.5
 Requires:	perl-devel
-Requires:	perl(XML::LibXML) perl(XML::SAX::Base) perl(XML::Writer) perl(XML::LibXSLT)
+Requires:	perl(XML::LibXML)
+Requires:	perl(XML::SAX::Base)
+Requires:	perl(XML::Writer)
+Requires:	perl(XML::LibXSLT)
 Requires:	perl(Term::ReadLine::Gnu)
 BuildRequires:	gcc-c++
 BuildRequires:	gmpxx-devel
@@ -43,14 +50,17 @@ BuildRequires:	libxml2-devel
 Suggests:	libcg
 BuildRequires:	java-devel >= 1.5
 BuildRequires:	jogl
-BuildRequires:  java-rpmbuild
+BuildRequires:	java-rpmbuild
 BuildRequires:	ant >= 1.7.1
 %endif
 BuildRequires:	perl-devel
 BuildRequires:	xmlto
 BuildRequires:	xsltproc
 BuildRequires:	xhtml1-dtds
-BuildRequires:	perl(XML::LibXML) perl(XML::SAX::Base) perl(XML::Writer) perl(ExtUtils::MakeMaker)
+BuildRequires:	perl(XML::LibXML)
+BuildRequires:	perl(XML::SAX::Base)
+BuildRequires:	perl(XML::Writer)
+BuildRequires:	perl(ExtUtils::MakeMaker)
 
 Patch0:		polymake-2.11-format.patch
 
@@ -72,8 +82,10 @@ geometry field, such as convex hull computation or visualization tools.
 %config %{_libdir}/polymake/conf.make
 %doc %{_docdir}/polymake
 
+#----------------------------------------------------------------------------
+
 %prep
-%setup -q -n %{topname}
+%setup -q
 
 %patch0 -p1
 
@@ -123,3 +135,4 @@ find %{buildroot}%{_libdir} -name \*.so | xargs chmod a-x
 %else
     rm -fr %{buildroot}%{_libdir}/%{name}/lib/jreality
 %endif
+
