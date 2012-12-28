@@ -3,7 +3,7 @@
 %define		_enable_debug_packages	%{nil}
 %define		debug_package		%{nil}
 
-%bcond_without	java
+%define		with_java		0
 
 %if %{_use_internal_dependency_generator}
 %define __noautoreq 'libCg(.*)|libGL(.*)|libjack(.*)|libjawt(.*)|libXxf86vm(.*)|libX11(.*)'
@@ -48,7 +48,7 @@ BuildRequires:	gmpxx-devel
 BuildRequires:	mpfr-devel
 BuildRequires:	boost-devel
 BuildRequires:	libxml2-devel
-%if %{with java}
+%if %{with_java}
 Suggests:	libcg
 BuildRequires:	java-devel >= 1.5
 BuildRequires:	jogl
@@ -108,7 +108,7 @@ LDflags="-lxml2 -lpthread -ldl"
 	--docdir=%{_docdir}/%{name}		\
 	--build=%{_target_cpu}			\
 	--without-prereq			\
-%if %{without java}
+%if !%{with_java}
 	--without-javaview			\
 	--without-java				\
 %endif
@@ -128,7 +128,7 @@ cp -fa %{SOURCE1} %{buildroot}%{_datadir}/%{name}
 find %{buildroot}%{_libdir} | xargs chmod u+w
 find %{buildroot}%{_libdir} -name \*.so | xargs chmod a-x
 
-%if %{with java}
+%if %{with_java}
     %ifarch x86_64 ppc64
 	rm -fr %{buildroot}%{_libdir}/%{name}/lib/jreality/jni/linux32
     %else
