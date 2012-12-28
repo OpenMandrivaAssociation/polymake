@@ -1,0 +1,14 @@
+--- polymake-2.12/lib/core/src/perl/RefHash.xs.orig	2012-12-28 11:36:52.043414637 -0200
++++ polymake-2.12/lib/core/src/perl/RefHash.xs	2012-12-28 11:37:27.953213839 -0200
+@@ -666,7 +666,11 @@ OP* check_pushhv(pTHX_ OP *o)
+          kid = kid->op_sibling;
+       if (kid->op_type == OP_RV2HV || kid->op_type == OP_PADHV) {
+          int arg_cnt=2;
++#if PerlVersion >= 5151
++         op_lvalue(kid, o->op_type);
++#else
+          Perl_mod(aTHX_ kid, o->op_type);
++#endif
+          while ((kid=kid->op_sibling)) {
+             if (kid->op_type == OP_RV2HV || kid->op_type == OP_PADHV) {
+                Perl_list(aTHX_ kid);

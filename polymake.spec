@@ -1,5 +1,3 @@
-%define		_disable_ld_no_undefined	1
-
 %define		_enable_debug_packages	%{nil}
 %define		debug_package		%{nil}
 
@@ -65,6 +63,7 @@ BuildRequires:	perl(XML::Writer)
 BuildRequires:	perl(ExtUtils::MakeMaker)
 
 Patch0:		polymake-2.11-format.patch
+Patch1:		polymake-2.12-Perl_mod.patch
 
 %description
 Polymake is a versatile tool for the algorithmic treatment of
@@ -90,6 +89,7 @@ geometry field, such as convex hull computation or visualization tools.
 %setup -q
 
 %patch0 -p1
+%patch1 -p1
 
 %build
 Cflags=`echo %{optflags} |				\
