@@ -1,3 +1,5 @@
+%define		_disable_ld_no_undefined	1
+
 %define		_enable_debug_packages	%{nil}
 %define		debug_package		%{nil}
 
@@ -12,7 +14,7 @@
 Name:		polymake
 Summary:	Algorithms around polytopes and polyhedra
 Version:	2.12
-Release:	1
+Release:	2
 License:	GPL
 Group:		Sciences/Mathematics
 URL:		http://www.polymake.org/
