@@ -59,6 +59,7 @@ BuildRequires:  perl(Term::ReadLine::Gnu)
 BuildRequires:  perl(XML::LibXSLT)
 BuildRequires:  perl(XML::SAX::Base)
 BuildRequires:  perl(XML::Writer)
+BuildRequires:  perl-devel
 BuildRequires:  ppl-devel
 BuildRequires:  sympol-devel
 BuildRequires:  xhtml1-dtds
