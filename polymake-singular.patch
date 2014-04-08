@@ -1,0 +1,68 @@
+--- ./bundled/singular/apps/ideal/src/singularIdeal.cc.orig	2014-03-31 11:19:08.999186134 -0600
++++ ./bundled/singular/apps/ideal/src/singularIdeal.cc	2014-03-31 11:37:25.030996415 -0600
+@@ -123,16 +123,16 @@ public:
+       arg.rtyp=IDEAL_CMD;
+       arg.data=(void *)idCopy(singIdeal);
+       // call radical
+-      BOOLEAN res=iiMake_proc(radical,NULL,&arg);
+-      if (res) {
++      leftv res=iiMake_proc(radical,NULL,&arg);
++      if (!res) {
+          errorreported = 0;
+-         iiRETURNEXPR.Init();
++         iiRETURNEXPR->Init();
+          throw std::runtime_error("radical returned an error");
+       }
+-      SingularIdeal_wrap* radical_wrap = new SingularIdeal_impl((::ideal) (iiRETURNEXPR.Data()), singRing);
++      SingularIdeal_wrap* radical_wrap = new SingularIdeal_impl((::ideal) (iiRETURNEXPR->Data()), singRing);
+       // FIXME cleanup iiRETURNEXPR ?
+-      iiRETURNEXPR.CleanUp();
+-      iiRETURNEXPR.Init();
++      iiRETURNEXPR->CleanUp();
++      iiRETURNEXPR->Init();
+       return radical_wrap;
+    }
+ 
+@@ -145,9 +145,9 @@ public:
+       arg.rtyp=IDEAL_CMD;
+       arg.data=(void *)idCopy(singIdeal);
+       // call primdecSY
+-      BOOLEAN res=iiMake_proc(primdecSY,NULL,&arg);
+-      if(!res && (iiRETURNEXPR.Typ() == LIST_CMD)){
+-         lists L = (lists)iiRETURNEXPR.Data();
++      leftv res=iiMake_proc(primdecSY,NULL,&arg);
++      if(res && (iiRETURNEXPR->Typ() == LIST_CMD)){
++         lists L = (lists)iiRETURNEXPR->Data();
+          Array<SingularIdeal_wrap*> result(L->nr+1);
+          for(int j=0; j<=L->nr; j++){
+             lists LL = (lists)L->m[j].Data();
+@@ -158,11 +158,11 @@ public:
+             }
+          }
+          // FIXME cleanup returndata ?
+-         iiRETURNEXPR.CleanUp();
+-         iiRETURNEXPR.Init();
++         iiRETURNEXPR->CleanUp();
++         iiRETURNEXPR->Init();
+          return result;
+       } else {
+-         iiRETURNEXPR.Init();
++         iiRETURNEXPR->Init();
+          throw std::runtime_error("Something went wrong for the primary decomposition");
+       }
+    }
+@@ -184,11 +184,11 @@ public:
+       int plevel = printlevel;
+       printlevel=-1;
+       // call solve
+-      BOOLEAN res=iiMake_proc(solve,NULL,&arg);
++      leftv res=iiMake_proc(solve,NULL,&arg);
+       printlevel=plevel;
+-      if(!res && (iiRETURNEXPR.Typ() == RING_CMD)){
++      if(res && (iiRETURNEXPR->Typ() == RING_CMD)){
+          // retrieve returned ring
+-         ring solring = (ring)iiRETURNEXPR.Data();
++         ring solring = (ring)iiRETURNEXPR->Data();
+          // avoid redefinition message
+          BITSET oldverb = verbose;
+          verbose &= ~Sy_bit(V_REDEFINE);

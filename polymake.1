@@ -1,0 +1,81 @@
+.TH "polymake" "1" "@VERSION@" "Polymake" "User Commands"
+.SH "NAME"
+polymake \- convex polytopes and polyhedra
+.SH "SYNOPSIS"
+.B polymake
+[\fIOPTIONS\fP] [\fIARGUMENTS\fP]
+.SH "DESCRIPTION"
+.PP
+This program provides algorithms that manipulate convex polytopes and
+polyhedra.  When run without arguments, an interactive shell is started.
+.SH "ARGUMENTS"
+.TP
+\fB\-\-help\fP
+Show a help message and exit.
+.TP
+\fB\-\-version\fP
+Print the version number and copyright notice, and exit.
+.TP
+[\fB\-\-script\fP] [\fIapplication\fP::]\fIscript_file\fP
+Execute the script stored in \fIscript_file\fP.  If the \fIapplication\fP
+prefix is specified, that application is loaded and the script file is looked
+up in its script directory.
+.TP
+\fB\-\-script\fP [\fIapplication\fP::]\fIscript_file\fP \fIarguments\fP ...
+Execute the script, passing the arguments in @ARGV.
+.TP
+\fB\-\-iscript\fP [\fIapplication\fP::]\fIscript_file\fP \fIarguments\fP ...
+Execute the script, which may contain interactive commands.
+.TP
+\fB'code'\fP
+Interpret the string as a perl expression.
+.TP
+\fB\-\fP
+Read and execute commands from standard input.
+.TP
+\fBfile\fP PROPERTY | METHOD [ ... ]
+Legacy mode (resembling polymake <= 2.3): Read the object from the data file,
+print the properties, or run the user methods.
+.TP
+\fB\-\-touch\fP \fIfile\fP [ \fIfile\fP ... ]
+Read the files and write them out; useful for converting from older polymake
+versions.
+.SH "OPTIONS"
+.TP
+\fB\-A\fP \fIapplication_name\fP
+Start with this application, ignoring the \fI$default_application\fP and
+\fI@start_applications\fP settings.
+.TP
+\fB\-d\fP
+Produce some debug output; can be repeated to increase the debug level.
+.TP
+\fB\-v\fP
+Verbose output; can be repeated to increase the verbosity level.  This is an
+obsolete option.  Use custom variables $Verbose::* to gain more detailed
+control.
+.TP
+\fB\-\-reconfigure\fP
+Rerun the autoconfiguration sections in all rule files.
+.TP
+\fB\-\-config\-path\fP "DIR;..."
+Import settings from global configuration files in the given directories.  If
+the last DIR in the list starts with ~/, use it instead of ~/.polymake to keep
+the private settings.  The default is "user", using only the private
+configuration located at $POLYMAKE_USER_DIR or ~/.polymake.
+.TP
+\fB\-\-no\-config\fP
+Equivalent to \-\-config\-path=none.  Don't read any configuration files.
+Don't try to configure rules automatically.  Don't load rule files requiring
+auto-configuration.
+.TP
+\fB\-\-ignore\-config\fP
+Equivalent to \-\-config\-path=ignore.  Don't read any configuration files.
+Skip auto-configuration routines in the rule files.
+.TP
+\fB\-n\fP
+Dry run mode: show the production rules that would be applied to the object,
+but don't actually run any.  This is only applicable in compatibility mode.
+.TP
+\fB\-T\fP \fIsec\fP
+Set a time limit for the execution of production rules.  This option currently
+has no effect.

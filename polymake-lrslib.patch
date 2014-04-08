@@ -1,0 +1,11 @@
+--- apps/polytope/src/lrs_interface.cc.orig	2011-12-20 17:47:59.000000000 -0700
++++ apps/polytope/src/lrs_interface.cc	2013-03-19 16:44:34.503260585 -0600
+@@ -310,7 +310,7 @@
+    {
+       // initialize static lrs data
+       Lin=0;
+-      Q=lrs_alloc_dat(0);
++      Q=lrs_alloc_dat("");
+       if (!Q) throw std::bad_alloc();
+       Q->m=Inequalities.rows()+Equations.rows();
+       Q->n=Inequalities.cols();

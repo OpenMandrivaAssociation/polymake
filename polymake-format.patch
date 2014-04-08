@@ -1,0 +1,11 @@
+--- ./lib/core/src/perl/RefHash.xs.orig	2013-08-14 13:17:10.000000000 -0600
++++ ./lib/core/src/perl/RefHash.xs	2014-01-08 13:50:43.368174796 -0700
+@@ -89,7 +89,7 @@ SV* ref2key(SV *keysv, tmp_keysv *tmp_ke
+    }                                                                    \
+ } STMT_END
+ 
+-static char err_ref[]="Reference as a key in a normal hash";
++static const char err_ref[]="Reference as a key in a normal hash";
+ 
+ static inline
+ int ref_key_allowed(HV *class)

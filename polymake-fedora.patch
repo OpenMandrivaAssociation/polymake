@@ -1,0 +1,161 @@
+--- ./apps/polytope/src/Makefile.inc.orig	2014-01-17 12:40:57.000000000 -0700
++++ ./apps/polytope/src/Makefile.inc	2014-01-17 14:57:44.958255450 -0700
+@@ -1,12 +1,12 @@
+ ifeq (${ExtensionTop},)
+   StaticLibs := cdd lrs
+ 
+-  lrs_interface$O : ExtraCXXFLAGS = -I$(ProjectTop)/external/lrs
+-  cdd_interface$O : ExtraCXXFLAGS = -I$(ProjectTop)/external/cdd/lib-src-gmp $(call addinclude, $(ProjectTop)/staticlib/cdd/globals_gmp.h)
+-  cdd_float_interface$O : ExtraCXXFLAGS = -I$(ProjectTop)/external/cdd/lib-src
++  lrs_interface$O : ExtraCXXFLAGS = -I/usr/include/lrslib
++  cdd_interface$O : ExtraCXXFLAGS = -I/usr/include/cddlib $(call addinclude, $(ProjectTop)/staticlib/cdd/globals_gmp.h)
++  cdd_float_interface$O : ExtraCXXFLAGS = -I/usr/include/cddlib
+   to_interface$O : ExtraCXXFLAGS = -I$(ProjectTop)/external/TOSimplex
+ 
+-  LIBS += $(BuildDir)/staticlib/lrs/liblrsgmp$A $(BuildDir)/staticlib/cdd/libcddgmp$A $(BuildDir)/staticlib/cdd/libcdd$A
++  LIBS += -llrsgmp -lcddgmp -lcdd
+ endif
+ 
+ ifneq ($(filter 4.4% 4.5%,${GCCversion}),)
+--- ./bundled/group/apps/polytope/src/Makefile.inc.orig	2014-01-17 12:40:59.000000000 -0700
++++ ./bundled/group/apps/polytope/src/Makefile.inc	2014-01-17 14:57:44.958255450 -0700
+@@ -1,14 +1,10 @@
+ ifeq (${ImportedIntoExtension},)
+   StaticLibs := sympol
+ 
+-  sympol_interface$O : ExtraCXXFLAGS += -I${ExtensionTop}/external/sympol
+-  sympol_raycomputation_beneathbeyond$O : ExtraCXXFLAGS += -I${ExtensionTop}/external/sympol
+-
+-  LIBS += ${BuildDir}/staticlib/sympol/libsympol$A ${BuildDir}/../../staticlib/cdd/libcddgmp$A
+-endif
++  sympol_interface$O : ExtraCXXFLAGS += -I/usr/include/sympol
++  sympol_raycomputation_beneathbeyond$O : ExtraCXXFLAGS += -I/usr/include/sympol
+ 
+-ifneq ($(filter 4.4%,${GCCversion}),)
+-  universal_polytope_ilps$O : ExtraCXXFLAGS += -O1
++  LIBS += -lsympol -lcddgmp
+ endif
+ 
+ # Local Variables:
+--- ./bundled/group/configure.pl.orig	2014-01-17 12:40:59.000000000 -0700
++++ ./bundled/group/configure.pl	2014-01-17 14:57:44.958255450 -0700
+@@ -29,7 +29,7 @@ sub proceed {
+    my ($options)=@_;
+    my $boost_path;
+    # everything can include permlib headers
+-   $CXXflags='-I${ExtensionTop}/external/permlib/include';
++   $CXXflags='-I/usr/include/permlib';
+ 
+    if (defined ($boost_path=$options->{boost})) {
+       $boost_path .= '/include' if (-d "$boost_path/include/boost");
+--- ./bundled/group/staticlib/sympol/Makefile.inc.orig	2014-01-17 12:40:59.000000000 -0700
++++ ./bundled/group/staticlib/sympol/Makefile.inc	2014-01-17 14:57:44.959255521 -0700
+@@ -4,7 +4,7 @@ src := $(ExtensionTop)/external/sympol/s
+ 
+ vpath %.cpp $(src)
+ 
+-libsympol : ExtraCXXFLAGS := -I$(ExtensionTop)/external/permlib/include -I$(ExtensionTop)/external/sympol/sympol -I$(ProjectTop)/external/lrs -DGMP -DLRS_QUIET -DGMPRATIONAL -I$(ProjectTop)/external/cdd/lib-src-gmp $(call addinclude, $(ProjectTop)/staticlib/cdd/globals_gmp.h)
++libsympol : ExtraCXXFLAGS := -I/usr/include/permlib -I/usr/include/sympol -I/usr/include/lrslib -DGMP -DLRS_QUIET -DGMPRATIONAL -I/usr/include/cddlib $(call addinclude, $(ProjectTop)/staticlib/cdd/globals_gmp.h)
+ 
+ # Local Variables:
+ # mode: Makefile
+--- ./bundled/libnormaliz/apps/polytope/src/Makefile.inc.orig	2014-01-17 12:40:58.000000000 -0700
++++ ./bundled/libnormaliz/apps/polytope/src/Makefile.inc	2014-01-17 15:29:22.981405715 -0700
+@@ -1,4 +1,5 @@
+-  ExtraCXXFLAGS = -I$(ExtensionTop)/external/libnormaliz
++  ExtraCXXFLAGS = -I/usr/include/libnormaliz
++  LIBS += -lnormaliz
+ 
+ # Local Variables:
+ # mode: Makefile
+--- ./bundled/libnormaliz/apps/polytope/src/normaliz.cc.orig	2014-01-17 12:40:58.000000000 -0700
++++ ./bundled/libnormaliz/apps/polytope/src/normaliz.cc	2014-01-17 15:55:35.601204574 -0700
+@@ -40,7 +40,7 @@ namespace libnormaliz {
+ 
+ }
+ 
+-#include "libnormaliz-all.cpp"
++#include <libnormaliz/cone.h>
+ 
+ namespace polymake { namespace polytope {
+ 
+--- ./perl/polymake-config.orig	2014-01-17 12:40:55.000000000 -0700
++++ ./perl/polymake-config	2014-01-17 14:57:44.959255521 -0700
+@@ -126,9 +126,6 @@ while (defined ($_=shift)) {
+ 
+    } elsif ($_ eq "--ldflags") {
+       my $ldflags=$conf{LDflags};
+-      if ($ldflags !~ /(?:^|\s)-L$conf{InstallLib}(?:\s|$)/) {
+-         $ldflags="-L$conf{InstallLib} $ldflags";
+-      }
+       my $add_rpath=1;
+       open CF, ">$tmpfile.cc" or die "can't create temporary file $tmpfile.cc: $!\n";
+       print CF "int main() { return 0; }\n";
+@@ -146,8 +143,6 @@ while (defined ($_=shift)) {
+       close CC;
+       if ($^O eq "darwin") {
+          $ldflags="$conf{ARCHFLAGS} $ldflags -flat_namespace";
+-      } elsif ($add_rpath) {
+-         $ldflags.=" -Wl,-rpath,$conf{InstallLib}";
+       }
+       $ldflags=~s/^\s+//; $ldflags=~s/\s+$//; $ldflags=~s/\s{2,}/ /g;
+       if ($debug_asked=defined($debug)) {
+--- ./staticlib/cdd/Makefile.inc.orig	2014-01-17 12:40:59.000000000 -0700
++++ ./staticlib/cdd/Makefile.inc	2014-03-31 12:00:00.000000000 -0700
+@@ -1,6 +1,3 @@
+-OwnLibraries := libcdd libcddgmp
+-LibModules := cddio cddmp cddlib cddcore cddlp cddproj setoper
+-
+ ExtraCFLAGS := -fvisibility=hidden 
+ 
+ ifeq "$(OwnLibraries)" "libcdd"
+@@ -8,8 +5,6 @@ ifeq "$(OwnLibraries)" "libcdd"
+ else
+   src := $(ProjectTop)/external/cdd/lib-src-gmp
+ 
+-  LibModules := $(LibModules) $(patsubst cdd%,cdd%_f,$(LibModules))
+-
+   $(addsuffix $(LO), $(LibModules)) : $(SourceDir)/globals_gmp.h
+ 
+   libcddgmp : ExtraCFLAGS += -DGMPRATIONAL $(call addinclude, $(SourceDir)/globals_gmp.h)
+--- ./staticlib/lrs/Makefile.inc.orig	2014-01-17 12:40:59.000000000 -0700
++++ ./staticlib/lrs/Makefile.inc	2014-01-17 14:57:44.960255584 -0700
+@@ -1,5 +1,3 @@
+-OwnLibraries := liblrsgmp
+-LibModules := lrslib lrsgmp
+ src := $(ProjectTop)/external/lrs
+ vpath %.c $(src)
+ 
+--- ./support/configure.pl.orig	2014-01-17 12:40:58.000000000 -0700
++++ ./support/configure.pl	2014-01-17 14:57:44.960255584 -0700
+@@ -372,7 +372,7 @@ if (defined $CC) {
+ print "ok ($CXX is ", defined($GCCversion) ? "GCC $GCCversion" : defined($CLANGversion) ? "CLANG $CLANGversion" : "ICC $ICCversion", ")\n";
+ 
+ $PERL     =$vars{PERL}     || $^X;
+-$CXXOPT   =$vars{CXXOPT}   || "-O3";
++$CXXOPT   =$vars{CXXOPT}   || "-O2";
+ $CXXDEBUG =$vars{CXXDEBUG} || "";
+ $Cflags   =$vars{CFLAGS}   || "";
+ $CXXflags =$vars{CXXFLAGS} || $Cflags;
+@@ -557,10 +557,6 @@ if (defined $GMP) {
+    $CXXflags .= " -I$GMP/include";
+    my $libdir=get_libdir($GMP, "gmp");
+    $LDflags .= " -L$libdir";
+-   if (($^O ne "darwin" || $options{fink} eq ".none.") && exists $options{gmp}) {
+-      # non-standard location
+-      $LDflags .= " -Wl,-rpath,$libdir";
+-   }
+ }
+ 
+ my $MPFR=$options{mpfr};
+@@ -569,10 +565,6 @@ if (defined($MPFR) && $MPFR ne $GMP) {
+    $CXXflags .= " -I$MPFR/include";
+    my $libdir=get_libdir($MPFR, "mpfr");
+    $LDflags .= " -L$libdir";
+-   if ($^O ne "darwin" || $options{fink} eq ".none.") {
+-      # non-standard location
+-      $LDflags .= " -Wl,-rpath,$libdir";
+-   }
+ }
+ 
+ if ($check_prereq) {
