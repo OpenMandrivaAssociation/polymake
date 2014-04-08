@@ -150,7 +150,7 @@ export LDFLAGS="$RPM_LD_FLAGS -Wl,--as-needed -ldl"
 export Arch=%{_arch}
 # NOT an autoconf-generated configure script; do not use %%configure.
 ./configure --build=%{_arch} --prefix=%{_prefix} --libdir=%{_libdir} \
-  --libexecdir=%{polydir} --without-java --without-javaview
+  --libexecdir=%{polydir} --without-java --without-javaview --without-ppl
 make %{?_smp_mflags} all
 
 # Help the debuginfo generator find generated files
