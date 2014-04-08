@@ -144,6 +144,8 @@ mkdir bin
 pushd bin
     ln -sf %{_bindir}/ld.bfd ld
 popd
+export $RPM_OPT_FLAGS="-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector-strong --param=ssp-buffer-size=4 -grecord-gcc-switches"
+export RPM_LD_FLAGS="-Wl,-z,relro"
 export PATH=$PWD/bin:$PATH
 export CFLAGS="$RPM_OPT_FLAGS -I%{_includedir}/eigen3 -I%{_includedir}/singular -Wno-unused-local-typedefs -fuse-ld=bfd"
 export CXXFLAGS="$CFLAGS"
