@@ -13,6 +13,9 @@
 # Date of the "perpetual beta" subversion snapshot
 %global svndate 20140326
 
+%define _enable_debug_packages %{nil}
+%define debug_package %{nil}
+
 Name:           polymake
 Version:        2.12
 Release:        15.svn%{svndate}%{?dist}
@@ -140,12 +143,6 @@ sed -i "s|yal/||;s|symmetrygroupconstruction/||" \
     bundled/group/apps/polytope/src/sympol_interface.cc
 
 %build
-mkdir bin
-pushd bin
-    ln -sf %{_bindir}/ld.bfd ld
-popd
-export RPM_OPT_FLAGS="-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches"
-export RPM_LD_FLAGS="-Wl,-z,relro"
 export PATH=$PWD/bin:$PATH
 export CFLAGS="$RPM_OPT_FLAGS -I%{_includedir}/eigen3 -I%{_includedir}/singular -Wno-unused-local-typedefs -fuse-ld=bfd"
 export CXXFLAGS="$CFLAGS"
