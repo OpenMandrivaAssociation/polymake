@@ -52,6 +52,7 @@ BuildRequires:  boost-devel
 BuildRequires:  cddlib-devel
 BuildRequires:  cmake
 BuildRequires:  eigen3-static
+BuildRequires:  gomp-devel
 BuildRequires:  libnormaliz-devel
 BuildRequires:  libxml2-devel
 BuildRequires:  lrslib-devel
