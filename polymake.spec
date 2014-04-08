@@ -54,6 +54,7 @@ BuildRequires:  libxml2-devel
 BuildRequires:  lrslib-devel
 BuildRequires:  mpfr-devel
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(JSON::PP)
 BuildRequires:  perl(Term::ReadLine::Gnu)
 BuildRequires:  perl(XML::LibXSLT)
 BuildRequires:  perl(XML::SAX::Base)
