@@ -10,6 +10,8 @@
 # support, rebuild Singular, then build polymake again with Singular support.
 %bcond_without singular
 
+%bcond_without ppl
+
 # Date of the "perpetual beta" subversion snapshot
 %global svndate 20140326
 
@@ -64,7 +66,9 @@ BuildRequires:  perl(XML::LibXSLT)
 BuildRequires:  perl(XML::SAX::Base)
 BuildRequires:  perl(XML::Writer)
 BuildRequires:  perl-devel
+%if %{with ppl}
 BuildRequires:  ppl-devel
+%endif
 BuildRequires:  sympol-devel
 BuildRequires:  docbook-dtds
 BuildRequires:  xhtml1-dtds
@@ -152,7 +156,12 @@ export LDFLAGS="$RPM_LD_FLAGS -Wl,--as-needed -ldl"
 export Arch=%{_arch}
 # NOT an autoconf-generated configure script; do not use %%configure.
 ./configure --build=%{_arch} --prefix=%{_prefix} --libdir=%{_libdir} \
-  --libexecdir=%{polydir} --without-java --without-javaview --without-ppl
+  --libexecdir=%{polydir} --without-java --without-javaview \
+%if %{without ppl}
+    --without-ppl
+%else
+
+%endif
 make %{?_smp_mflags} all
 
 # Help the debuginfo generator find generated files
@@ -204,14 +213,12 @@ find %{buildroot}%{polydir} -name \*.so | xargs chmod 0755
 sed -i 's,%{buildroot},,' %{buildroot}%{polydir}/bundled/bliss/conf.make
 sed -i 's,%{buildroot},,' %{buildroot}%{polydir}/bundled/group/conf.make
 sed -i 's,%{buildroot},,' %{buildroot}%{polydir}/bundled/libnormaliz/conf.make
+%if %{with ppl}
 sed -i 's,%{buildroot},,' %{buildroot}%{polydir}/bundled/ppl/conf.make
+%endif
 %if %{with singular}
 sed -i 's,%{buildroot},,' %{buildroot}%{polydir}/bundled/singular/conf.make
 %endif
-
-%post -p /sbin/ldconfig
-
-%postun -p /sbin/ldconfig
 
 %files
 %{_bindir}/%{name}
