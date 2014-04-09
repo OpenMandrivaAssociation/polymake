@@ -66,6 +66,7 @@ BuildRequires:  perl(XML::Writer)
 BuildRequires:  perl-devel
 BuildRequires:  ppl-devel
 BuildRequires:  sympol-devel
+BuildRequires:  docbook-dtds
 BuildRequires:  xhtml1-dtds
 %if %{with singular}
 BuildRequires:  singular-devel
