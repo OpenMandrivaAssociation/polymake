@@ -85,25 +85,10 @@ Requires:       perl(Term::ReadLine::Gnu)
 %global polydir %{_libdir}/%{name}
 
 # Don't expose private perl interfaces
-%global __noautoreq 'perl\(Geomview.*\)'
-%global __noautoreq '%{__noautoreq}|perl\(Graphviz.*\)'
-%global __noautoreq '%{__noautoreq}|perl\(Metapost.*\)'
-%global __noautoreq '%{__noautoreq}|perl\(PerlIO.*\)'
-%global __noautoreq '%{__noautoreq}|perl\(Postscript.*\)'
-%global __noautoreq '%{__noautoreq}|perl\(Povray.*\)'
-%global __noautoreq '%{__noautoreq}|perl\(Sketch.*\)'
-%global __noautoreq '%{__noautoreq}|perl\(SplitsTree.*\)'
-%global __noautoreq '%{__noautoreq}|perl\(application\)'
-%global __noautoreq '%{__noautoreq}|perl\(_.*\)'
+%global __noautoreq 'perl\(Geomview.*\)|perl\(Graphviz.*\)|perl\(Metapost.*\)|perl\(PerlIO.*\)|perl\(Postscript.*\)|perl\(Povray.*\)|perl\(Sketch.*\)|perl\(SplitsTree.*\)|perl\(application\)|perl\(_.*\)'
 
 # Exclude private perl interfaces that we don't Provide
-%global __noautoprov 'perl\(it\)
-%global __noautoprov '%{__noautoprov}|perl\(Polymake::Background\)'
-%global __noautoprov '%{__noautoprov}|perl\(Polymake::Core::RuleFilter\)'
-%global __noautoprov '%{__noautoprov}|perl\(Polymake::file_utils\.pl\)'
-%global __noautoprov '%{__noautoprov}|perl\(Polymake::Namespaces\)'
-%global __noautoprov '%{__noautoprov}|perl\(Polymake::regex\.pl\)'
-%global __noautoprov '%{__noautoprov}|perl\(Polymake::utils\.pl\)'
+%global __noautoprov 'perl\(it\)|perl\(Polymake::Background\)|perl\(Polymake::Core::RuleFilter\)|perl\(Polymake::file_utils\.pl\)|perl\(Polymake::Namespaces\)|perl\(Polymake::regex\.pl\)|perl\(Polymake::utils\.pl\)'
 
 %description
 Polymake is a tool to study the combinatorics and the geometry of convex
