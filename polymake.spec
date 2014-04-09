@@ -10,7 +10,7 @@
 # support, rebuild Singular, then build polymake again with Singular support.
 %bcond_without singular
 
-%bcond_without ppl
+%bcond_with ppl
 
 # Date of the "perpetual beta" subversion snapshot
 %global svndate 20140326
