@@ -8,7 +8,7 @@
 # rebuilt, because each BRs the other and both are linked against the old
 # version of the library.  Use this to rebuild polymake without Singular
 # support, rebuild Singular, then build polymake again with Singular support.
-%bcond_without singular
+%bcond_with singular
 
 %bcond_with ppl
 
@@ -150,7 +150,7 @@ sed -i "s|yal/||;s|symmetrygroupconstruction/||" \
 
 %build
 export PATH=$PWD/bin:$PATH
-export CFLAGS="$RPM_OPT_FLAGS -I%{_includedir}/eigen3 -I%{_includedir}/singular -Wno-unused-local-typedefs -fuse-ld=bfd"
+export CFLAGS="$RPM_OPT_FLAGS -I%{_includedir}/eigen3 -I%{_includedir}/singular -Wno-unused-local-typedefs"
 export CXXFLAGS="$CFLAGS"
 export LDFLAGS="$RPM_LD_FLAGS -Wl,--as-needed -ldl"
 export Arch=%{_arch}
