@@ -83,10 +83,10 @@ Requires:       perl(Term::ReadLine::Gnu)
 %global polydir %{_libdir}/%{name}
 
 # Don't expose private perl interfaces
-%global __noautoreq 'perl\(Geomview.*\)|perl\(Graphviz.*\)|perl\(Metapost.*\)|perl\(PerlIO.*\)|perl\(Postscript.*\)|perl\(Povray.*\)|perl\(Sketch.*\)|perl\(SplitsTree.*\)|perl\(application\)|perl\(_.*\)|perl\(it\)|perl\(Polymake::Background\)|perl\(Polymake::Core::RuleFilter\)|perl\(Polymake::file_utils\.pl\)|perl\(Polymake::Namespaces\)|perl\(Polymake::regex\.pl\)|perl\(Polymake::utils\.pl\)'
+%global __noautoreq 'perl\\(Geomview.*\\)|perl\\(Graphviz.*\\)|perl\\(Metapost.*\\)|perl\\(PerlIO.*\\)|perl\\(Postscript.*\\)|perl\\(Povray.*\\)|perl\\(Sketch.*\\)|perl\\(SplitsTree.*\\)|perl\\(application\\)|perl\\(_.*\\)|perl\\(it\\)|perl\\(Polymake::Background\\)|perl\\(Polymake::Core::RuleFilter\\)|perl\\(Polymake::file_utils\\.pl\\)|perl\\(Polymake::Namespaces\\)|perl\\(Polymake::regex\\.pl\\)|perl\\(Polymake::utils\\.pl\\)'
 
 # Exclude private perl interfaces that we don't Provide
-%global __noautoprov 'perl\(Geomview.*\)|perl\(Graphviz.*\)|perl\(Metapost.*\)|perl\(PerlIO.*\)|perl\(Postscript.*\)|perl\(Povray.*\)|perl\(Sketch.*\)|perl\(SplitsTree.*\)|perl\(application\)|perl\(_.*\)|perl\(it\)|perl\(Polymake::Background\)|perl\(Polymake::Core::RuleFilter\)|perl\(Polymake::file_utils\.pl\)|perl\(Polymake::Namespaces\)|perl\(Polymake::regex\.pl\)|perl\(Polymake::utils\.pl\)'
+%global __noautoprov 'perl\\(Geomview.*\\)|perl\\(Graphviz.*\\)|perl\\(Metapost.*\\)|perl\\(PerlIO.*\\)|perl\\(Postscript.*\\)|perl\\(Povray.*\\)|perl\\(Sketch.*\\)|perl\\(SplitsTree.*\\)|perl\\(application\\)|perl\\(_.*\\)|perl\\(it\\)|perl\\(Polymake::Background\\)|perl\\(Polymake::Core::RuleFilter\\)|perl\\(Polymake::file_utils\\.pl\\)|perl\\(Polymake::Namespaces\\)|perl\\(Polymake::regex\\.pl\\)|perl\\(Polymake::utils\\.pl\\)'
 
 %description
 Polymake is a tool to study the combinatorics and the geometry of convex
