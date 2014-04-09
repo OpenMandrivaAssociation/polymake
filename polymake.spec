@@ -76,8 +76,6 @@ BuildRequires:  xhtml1-dtds
 BuildRequires:  singular-devel
 %endif
 
-Requires:       perl(:MODULE_COMPAT_%{perl_version})
-Requires:       perl = 4:%{perl_version}
 Requires:       perl(Term::ReadLine::Gnu)
 
 %global sover   %(echo %{version} | cut -d. -f1-2)
