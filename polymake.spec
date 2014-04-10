@@ -10,7 +10,7 @@
 # support, rebuild Singular, then build polymake again with Singular support.
 %bcond_with singular
 
-%bcond_with ppl
+%bcond_without ppl
 
 # Date of the "perpetual beta" subversion snapshot
 %global svndate 20140326
@@ -20,7 +20,7 @@
 
 Name:           polymake
 Version:        2.12
-Release:        15.svn%{svndate}%{?dist}
+Release:        16.svn%{svndate}%{?dist}
 Summary:        Algorithms on convex polytopes and polyhedra
 
 License:        GPLv2+
