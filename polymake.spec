@@ -8,7 +8,7 @@
 # rebuilt, because each BRs the other and both are linked against the old
 # version of the library.  Use this to rebuild polymake without Singular
 # support, rebuild Singular, then build polymake again with Singular support.
-%bcond_without singular
+%bcond_with singular
 
 %bcond_without ppl
 
@@ -20,7 +20,7 @@
 
 Name:           polymake
 Version:        2.12
-Release:        17.svn%{svndate}%{?dist}
+Release:        18.svn%{svndate}%{?dist}
 Summary:        Algorithms on convex polytopes and polyhedra
 
 License:        GPLv2+
