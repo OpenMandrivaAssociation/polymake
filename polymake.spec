@@ -24,7 +24,7 @@ Release:        18.svn%{svndate}%{?dist}
 Summary:        Algorithms on convex polytopes and polyhedra
 
 License:        GPLv2+
-URL:            http://polymake.org/
+URL:            https://polymake.org/
 #Source0:        http://polymake.org/lib/exe/fetch.php/download/%%{name}-%%{version}%%{rctag}.tar.bz2
 # Sources taken from the polymake "perpetual beta".  Create the tarball thusly:
 #   svn checkout --username "guest" --password "" http://polymake.mathematik.tu-darmstadt.de/svn/polymake/snapshots/%{svndate} polymake-%{version}
