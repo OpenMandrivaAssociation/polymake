@@ -49,6 +49,10 @@ Patch2:         %{name}-format.patch
 # Singular package is updated to version 3-1-6 or later.
 Patch3:         %{name}-singular.patch
 
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	libtool-base
+BuildRequires:	slibtool
 BuildRequires:  bliss-devel
 BuildRequires:  boost-devel
 BuildRequires:  cddlib-devel
